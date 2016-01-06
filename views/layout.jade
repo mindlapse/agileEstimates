@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    base(href="/")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    script(src='js/lib/require.js' data-main='js/main.js')
+
+  body
+    div(ng-cloak ng-controller='GroundCtrl as root' style="height:100%")
+        nav.navbar.navbar-inverse.navbar-fixed-top
+            .navbar-header
+                a.navbar-brand(href="#") Agile Estimates
+
+                ul.nav.navbar-nav
+                    li.dropdown(ng-if='root.teamSvc.isTeamSelected()')
+                        a.dropdown-toggle(href="#" class="dropdown-toggle" data-toggle="dropdown" role="button")
+                            | {{root.teamSvc.getSelectedTeamName()}}
+                            span.caret
+                        ul.dropdown-menu
+                            li(ng-repeat="team in root.teamSvc.getTeams()")
+                                a(href='#' ng-click='root.teamSvc.setTeamChoice(team.teamId)') {{team.teamName}}
+        .ga-body
+                block content

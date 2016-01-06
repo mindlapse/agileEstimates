@@ -1,0 +1,124 @@
+@import "../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../bower_components/Font-Awesome/scss/font-awesome";
+
+html,
+body,
+[ng-controller] {
+  height: 100%;
+}
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+body {
+  font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.addButton {
+  cursor:pointer;
+}
+.ticketName {
+  font-size:1.5em;
+}
+.estimate {
+  font-size:1.5em;
+}
+.ga-body {
+  margin-top:8em;
+}
+
+.geRow {
+  padding:.5em;
+  border-top:1px solid #d5e5e7;
+
+  &:hover {
+    background-color: #e4f4f6;
+  }
+}
+
+.fatLine {
+  line-height:4.5rem;
+}
+
+.freezeButton {
+  @extend .btn, .btn-default;
+  cursor:pointer;
+
+  .freezeIcon {
+    @extend .fa, .fa-lock;
+  }
+  .unfreezeIcon {
+    @extend .fa, .fa-unlock;
+  }
+}
+
+.deleteButton {
+  @extend .btn, .btn-default;
+  cursor:pointer;
+
+  .deleteIcon {
+    @extend .fa, .fa-trash-o;
+  }
+}
+
+.hiddenCell {
+  padding-top:.5em;
+  padding-left:.5em;
+  color:silver;
+  .hiddenIcon {
+    @extend .fa, .fa-question-circle, .fa-2x;
+  }
+}
+
+.pointVote {
+  position: relative;
+  font-size: 3em;
+  top: .5rem;
+}
+
+.starTarget {
+  position: relative;
+  top: 1em;
+  left: -1em;
+}
+
+@keyframes starburst {
+  0% {
+    opacity: 0;
+    font-size: 5em;
+    left:-.5em;
+    top:-.5em;
+  }
+
+  50% {
+    opacity: .5;
+    font-size: 15em;
+    left:-.5em;
+    top:-.5em;
+  }
+
+  100% {
+    opacity: 0;
+    font-size: 25em;
+    left:-.5em;
+    top:-.5em;
+    animation-timing-function:ease-out;
+  }
+}
+
+.starburst {
+  @extend .fa;
+  @extend .fa-star-o;
+
+  position:absolute;
+  color:yellow;
+  z-index:1001;
+
+  animation-name: starburst;
+  animation-timing-function:linear;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}

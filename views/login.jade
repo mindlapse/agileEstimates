@@ -1,0 +1,27 @@
+extends layout
+block content
+
+    .fb-root
+    script.
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_GB/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function navigateToUserHome() {
+            var scope = angular.element(document.getElementById("loginCtrl")).scope();
+            scope.login.navigateToUserHome();
+        }
+
+
+    .container-fluid(id='loginCtrl' ng-controller='LoginCtrl as login' ng-cloak)
+
+        .row
+
+            .col-xs-12.text-center(ng-show='login.showFacebookButton')
+                h3 Please sign in
+                .fb-login-button(showdata-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false" onlogin='navigateToUserHome()')
+

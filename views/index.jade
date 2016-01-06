@@ -1,0 +1,84 @@
+extends layout
+
+block content
+
+    .container-fluid(ng-controller='EstimateCtrl as est')
+        .row
+            .col-xs-10.col-xs-offset-1.col-md-4.col-md-offset-1
+                .input-group
+                    input.form-control.input-lg(ng-model='est.ticketName' ng-keypress='est.addTicket($event);' type='text' placeholder='Add a ticket')
+                    span.input-group-addon.addButton(ng-click="est.addTicket()" ) Add
+        .row
+            .col-xs-12
+                br
+                br
+        .row
+            .col-md-10.col-md-offset-1.col-lg-9.col-lg-offset-1
+                .row(ng-cloak)
+                    .col-xs-2.col-lg-2.h3.fa.fa-file-text.fa-2x(title="Ticket")
+                    .col-xs-2.col-lg-2
+                        .h3.fa.fa-users.fa-2x(title="The group estimate") &nbsp;&nbsp;
+                        .h3.fa.fa-bullseye.fa-2x(title="The group estimate")
+                    .col-xs-3.col-lg-3
+                        .h3.fa.fa-user.fa-2x(title='Your estimate') &nbsp;&nbsp;
+                        .h3.fa.fa-bullseye.fa-2x(title='Your estimate')
+                    .col-xs-4.col-lg-4.h3 Heros
+                    .col-xs-1.col-lg-1
+
+                .row.geRow(ng-repeat='row in est.rows' ng-class='')
+                    .col-xs-2.col-lg-2.fatLine
+                        // a.ticketName(href='//.../browse/{{row.name}}') {{row.name}}
+                        .ticketName {{row.name}}
+                    .col-xs-2.col-lg-2.fatLine
+                        .estimate(ng-show="row.estimate") {{row.estimate | number : 2}}
+                        .hiddenCell(ng-hide="row.estimate")
+                            .hiddenIcon(title='More estimates are needed')
+                    .col-xs-3.col-lg-3
+                        .row
+                            .col-xs-12.col-md-10.col-lg-10
+                                .input-group
+                                    input.form-control.input-lg(ng-model='row.userEstimate' ng-disabled='row.frozen' ng-keypress='est.addEstimate(row, $index, $event);' type='text' placeholder='')
+                                    span.input-group-addon.addButton(ng-click="est.addEstimate(row, $index)" ) Save
+                                    span(class="starTarget starTarget{{$index}}")
+                    .col-xs-4.col-lg-4
+                        span(ng-repeat='user in row.users')
+                            estimate-info(user='user')
+                            |&nbsp;
+
+                    .col-xs-1.col-lg-1.fatLine
+                        table
+                            tr
+                                td
+                                    button.freezeButton(ng-if="row.isOwner" ng-click='est.toggleFrozen(row)')
+                                        i(ng-class="{freezeIcon : row.frozen, unfreezeIcon : !row.frozen}")
+                                td
+                                    button.deleteButton(ng-if="row.isOwner" data-toggle="modal" data-target="#confirmDeleteModal" ng-click='est.setRowToDelete(row)')
+                                        i.deleteIcon
+
+
+
+        .modal.fade(id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel")
+            .modal-dialog(role="document")
+                .modal-content
+                    .modal-header
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                        h4.modal-title(id="myModalLabel") Are you sure?
+                    .modal-body
+                        | Click <b>Delete '{{est.rowToDelete.name}}'</b> to remove the row along with any of its estimates
+                    .modal-footer
+                        button.button.btn.btn-warning(data-dismiss="modal" ng-click='est.deleteTicket()') Delete '{{est.rowToDelete.name}}'
+                        button.button.btn.btn-default(data-dismiss="modal") Cancel
+
+        script(type='text/ng-template' id='estimateInfoTemplate.html')
+            img(
+                id="{{estInfo.id}}"
+                ng-src="{{estInfo.photoURL}}")
+
+
+
+
+
+
+
+
