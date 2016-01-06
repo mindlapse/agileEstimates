@@ -8,9 +8,9 @@ var app = require('../app');
 var debug = require('debug')('app:server');
 var https = require('https');
 var fs = require('fs')
-var privateKey = fs.readFileSync('/etc/letsencrypt/live/agileestimates.com/privkey.pem');
-var certificate = fs.readFileSync('/etc/letsencrypt/live/agileestimates.com/fullchain.pem');
-var credentials = {key: privateKey, cert: certificate};
+// var privateKey = fs.readFileSync('/etc/letsencrypt/live/agileestimates.com/privkey.pem');
+// var certificate = fs.readFileSync('/etc/letsencrypt/live/agileestimates.com/fullchain.pem');
+// var credentials = {key: privateKey, cert: certificate};
 
 /**
  * Get port from environment and store in Express.
