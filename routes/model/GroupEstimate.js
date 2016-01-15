@@ -4,7 +4,7 @@ let settings = require("../../settings.json");
 
 class GroupEstimate {
 
-    constructor(ticketId, ticketName, viewerUserId, frozen) {
+    constructor(ticketId, ticketName, viewerUserId, frozen, added) {
         this._ticketId       = ticketId
         this._ticketName     = ticketName
         this._users          = new Set()
@@ -13,6 +13,7 @@ class GroupEstimate {
         this._owner          = 0
         this._viewer         = viewerUserId
         this._frozen         = frozen
+        this._added          = added
     }
 
     addEstimate(fbId, userName, estimate) {
@@ -38,11 +39,11 @@ class GroupEstimate {
                 delete user.estimate
             }
         }
-        return userList;
+        return userList
     }
 
     get frozen() {
-        return this._frozen == 'Y';
+        return this._frozen == 'Y'
     }
 
     set owner(userId) {
@@ -54,9 +55,14 @@ class GroupEstimate {
         return this.haveEnoughEstimates() ? this._total / this._numEstimates : null
     }
 
+    get added() {
+        return this._added
+    }
+
     haveEnoughEstimates() {
-        console.log("Estimates needed" + settings.estimatesNeeded);
-        return this._numEstimates >= settings.estimatesNeeded;
+        return this.frozen
+        // console.log("Estimates needed" + settings.estimatesNeeded);
+        // return this._numEstimates >= settings.estimatesNeeded;
     }
 
     /**
@@ -70,7 +76,14 @@ class GroupEstimate {
             }
         }
         console.log([...g1()])
-        return [...g1()]
+        let unsorted    = [...g1()];
+        let sorted = unsorted.sort(function (a, z) {
+            console.log(a.added.getTime());
+            return z.added.getTime() - a.added.getTime()
+        });
+        console.log("Sorted");
+        console.dir(sorted);
+        return sorted;
     }
 
     toObject() {
@@ -80,7 +93,8 @@ class GroupEstimate {
             estimate    : this.estimate,
             users       : this.users,
             frozen      : this.frozen,
-            isOwner     : this._viewer == this._owner
+            isOwner     : this._viewer == this._owner,
+            added       : this._added
         }
     }
 }

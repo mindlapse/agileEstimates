@@ -22,6 +22,7 @@ module.exports = {
                 "t.ticketId, " +
                 "t.name, " +
                 "t.addedBy, " +
+                "t.added," +
                 "t.frozen, " +
                 "e.estimate, " +
                 "u.fbId, " +
@@ -44,7 +45,7 @@ module.exports = {
             for (let row of data) {
                 let estimate = estimateMap.get(row.name);
                 if (!estimate) {
-                    estimate = new GroupEstimate(row.ticketId, row.name, userId, row.frozen);
+                    estimate = new GroupEstimate(row.ticketId, row.name, userId, row.frozen, new Date(row.added));
                     estimate.owner = row.addedBy;
 
                     estimateMap.set(row.name, estimate);

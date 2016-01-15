@@ -1,10 +1,11 @@
 "use strict"
 let db = require('./dao/db')
 let l = require("./util/log")
+let util = require("./util/util")
 let express = require('express')
 let router = express.Router()
-let extend = require("extend");
-let settings = require("../settings.json");
+let extend = require("extend")
+let settings = require("../settings.json")
 
 // Support teams, support sprints.
 // DONE when a ticket is added, the results are reloaded
@@ -64,9 +65,11 @@ function sendAllEstimates(req, res) {
     return dao.loadEstimates(req.c, settings.daysBack, userId(req), teamId(req)).then(
         (groupEstimates) => {
             // Decorate with user estimates.
+            l("Loaded group estimates " + l(groupEstimates))
 
             return dao.loadUserEstimateMap(req.c, userId(req), teamId(req)).
                 then((ticketToEstimateMap) => {
+                    l("Loaded " + l(ticketToEstimateMap))
 
                     for (let ge of groupEstimates) {
                         if (ticketToEstimateMap.has(ge.name)) {
@@ -92,7 +95,7 @@ router.use(require("./middleware/checkIsLoggedIn"));        // REST Endpoints pa
 
 router.get('/', (req, res) => {
 
-   res.render('index')
+   res.render('index', {ticketPrefix : settings.ticketPrefix})
 });
 
 
@@ -126,8 +129,9 @@ router.post("/api/deleteTicket", function(req, res) {
             return dao.deleteTicket(req.c, ticketId, userId(req), teamId(req))
         }).
         then(() => {
-            res.send({deleted : true})
-        })
+            return {deleted : true}
+        }).then(util.sendResults(res)).catch(util.error(res))
+
 })
 
 /**
@@ -140,7 +144,7 @@ router.post("/api/setFrozen", function(req, res) {
     var ticketId = req.body.ticketId
     var freeze = req.body.freeze
     return dao.setFrozen(req.c, ticketId, userId(req), freeze).
-        then(() => { res.send({}) })
+        then(() => { res.send({}) }).catch(util.error(res))
 })
 
 /*
@@ -148,6 +152,7 @@ router.post("/api/setFrozen", function(req, res) {
  */
 
 router.post("/api/loadEstimates", function(req, res) {
+    l("/api/loadEstimates for " + req.body);
     sendAllEstimates(req, res);
 });
 
@@ -171,11 +176,14 @@ router.post("/api/setEstimate", function(req, res) {
  */
 
 router.post("/api/loadTeamPreference", function(req, res) {
+    l("/api/loadTeamPreference for " + l(req.body))
     dao.
         loadTeamPreference(req.c, userId(req)).
         then((row) => {
-            res.send({teamId : row.teamId, teamName : row.teamName})
-        })
+            var ret = {teamId : row.teamId, teamName : row.teamName};
+            l("Returning " + l(ret))
+            return ret
+        }).then(util.sendResults(res)).catch(util.error(res));
 })
 
 router.post("/api/changeTeamPreference", function(req, res) {
@@ -185,8 +193,8 @@ router.post("/api/changeTeamPreference", function(req, res) {
             return dao.loadUserByUserId(req.c, req.session.user.userId)
         }).then((user) => {
             req.session.user = user
-            res.send({changedTeamTo: user.teamChoice})
-        })
+            return {changedTeamTo: user.teamChoice}
+        }).then(util.sendResults(res)).catch(util.error(res));
 })
 
 

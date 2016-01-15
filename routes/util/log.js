@@ -8,9 +8,7 @@ module.exports = function(item) {
 
     if (typeof(item) == 'string') {
         console.log(item);
-    } else if (typeof(item) == 'object') {
-        return JSON.stringify(item);
     } else {
-        return typeof(item);
+        return JSON.stringify(item);
     }
 }

@@ -44,34 +44,36 @@ var me = {
     },
 
     query : function(c, sql, params) {
-        var q = Q.defer();
-
-        c.query(sql, params, (err, rs) => {
-            if (err) {
-                l("Error : " + l(err));
-                q.reject(err);
-            } else {
-                q.resolve(rs);
-            }
+        return new Promise((y, n) => {
+            c.query(sql, params, (err, rs) => {
+                if (err) {
+                    l("Error : " + l(err));
+                    n(err);
+                } else {
+                    y(rs);
+                }
+            });
         });
+
 
         return q.promise;
     },
 
     queryOne : function(c, sql, params) {
-        var q = Q.defer();
-
-        c.query(sql, params, (err, rs) => {
-            if (err) {
-                q.reject(err);
-            } else if (rs.length != 1) {
-                q.reject("Expected one result from " + sql + " with params [" + params.join(',') + "] but found " + rs.length);
-            } else {
-                q.resolve(rs[0]);
-            }
+        return new Promise((y, n) => {
+            l("queryOne for " + sql + l(params))
+            c.query(sql, params, (err, rs) => {
+                if (err) {
+                    l("Error " + l(err))
+                    n(err);
+                } else if (rs.length != 1) {
+                    n("Expected one result from " + sql + " with params [" + params.join(',') + "] but found " + rs.length);
+                } else {
+                    l("Loaded " + l(rs[0]))
+                    y(rs[0]);
+                }
+            });
         });
-
-        return q.promise;
     }
 };
 module.exports = me;
